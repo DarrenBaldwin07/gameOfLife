@@ -12,8 +12,8 @@ let canvasDimensions = [window.innerWidth - 100, window.innerHeight * (0.75)];
 let tileSize = 10;
 // let gridWidth = canvasDimensions[0] / tileSize;
 // let gridHeight = canvasDimensions[1] / tileSize;
-let gridWidth = 5;
-let gridHeight = 5;
+let gridWidth = 80;
+let gridHeight = 80;
 
 
 mainCanvas.width = canvasDimensions[0];
@@ -30,16 +30,16 @@ const createArray = function (rows) {
 };
 
 let grid2 = createArray(gridWidth);
-let grid = createArray(gridWidth);
+let grid = createArray(gridHeight);
 // Change: Make it such that each array inside the main array is either all 0s or all ones (not a random mix)
 
-const createGridRandomly = function (grid) {
+const createGridRandomly = function(grid) {
 
     for (let i = 0; i < gridHeight; i++) {
 
         for (let j = 0; j < gridWidth; j++) {
-            const randOneZero = Math.floor(Math.random() * 2);
             // gets me a random zero or 1 to append to array
+            const randOneZero = Math.floor(Math.random() * 2);
             if (randOneZero === 1) {
                 grid[i][j] = 1;
             } else {
@@ -49,8 +49,24 @@ const createGridRandomly = function (grid) {
     };
 };
 
-const clickGrid = function(grid) {
-
+const clickGrid = function(newGrid, event) {
+    let mouseCoordinates = [event.clientX - mainCanvas.getBoundingClientRect().left, event.clientY - mainCanvas.getBoundingClientRect().top] //store the user's x,y coordinate in an array
+    
+    for(let i = 0; i < gridHeight; i++) {
+        for(let j = 0; j < gridWidth; j++){
+            if(mouseCoordinates[0] >= (j * tileSize) && mouseCoordinates[0] <= ((j * tileSize) + tileSize) && mouseCoordinates[1] >= (i * tileSize) && mouseCoordinates[1] <= ((i * tileSize)+tileSize)) {
+                console.log(newGrid[i][j])
+                if(newGrid[i][j] == 1){
+                    newGrid[i][j] = 0;
+                    console.log(newGrid[i][j])
+                }else {
+                    newGrid[i][j] = 1;
+                };
+            };
+        };
+    };
+    console.log(newGrid)
+    return newGrid
 }
 
 // 80 x 80 (80 rows of 80 cells)
@@ -78,7 +94,7 @@ const drawGrid = function (grid) {
 // 80 x 80 - 80 rows of 10 pixel cells
 
 const playGame = function () {
-    drawGrid(grid);
+    drawGrid(grid)
     grid2 = countAdjCells(grid, grid2, gridHeight, gridWidth);
 
     for (let i = 0; i < gridHeight; i++) {
@@ -93,20 +109,8 @@ const playGame = function () {
 createGridRandomly(grid);
 drawGrid(grid);
 mainCanvas.addEventListener("click", (event) => {
-    let mouseCoordinates = [event.clientX - mainCanvas.getBoundingClientRect().left, event.clientY - mainCanvas.getBoundingClientRect().top] //store the user's x,y coordinate in an array
-    for(let i = 0; i < gridHeight; i++) {
-        for(let j = 0; j < gridWidth; j++){
-            if(mouseCoordinates[0] >= (j * tileSize) && mouseCoordinates[0] <= ((j * tileSize) + tileSize) && mouseCoordinates[1] >= (i * tileSize) && mouseCoordinates[1] <= ((i * tileSize)+tileSize)) {
-                let clickedCell = grid[i][j];
-                console.log(clickedCell)
-                if(clickedCell == 1){
-                    console.log("this cell is 1")
-                }else {
-                    console.log("this cell is 0")
-                };
-            };
-        };
-    };
+    grid = clickGrid(grid, event)
+    drawGrid(grid)
 });
 
 startGame.addEventListener('click', playGame);
