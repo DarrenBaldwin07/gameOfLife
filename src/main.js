@@ -4,10 +4,9 @@ const startGame = document.getElementById('start-game');
 const randGrid = document.getElementById('gen-rand');
 
 // columns, rows - (THESE VALUESs NEED TO BE THE CANVAS WIDTH X CANVAS HEIGHT)
-// right now for each 1 that we find we render out one (one pixel) square 
+// right now for each 1 that we find we render out one (10 x 10) square 
 let gridHeight = 80;
 let gridWidth =  80;
-
 
 // create grid
 const createArray = function(rows) {
@@ -20,11 +19,6 @@ const createArray = function(rows) {
     return arr;
 };
 
-
-
-
-
-// Change: Make it such that each array inside the main array is either all 0s or all ones (not a random mix)
 
 const createGridRandomly = function(grid) {
 
@@ -69,8 +63,6 @@ const drawGrid = function(grid) {
 
 
 
-
-
 // 80 x 80 - 80 rows of 10 pixel cells
 const showRandTemp = function() {
     let grid = createArray(gridWidth);
@@ -84,7 +76,7 @@ const showRandTemp = function() {
 
 let grid2 = createArray(gridWidth);
 
-let grid = showRandTemp()
+let grid = showRandTemp();
 const playGame = function() {
     drawGrid(grid);
     grid2 = countAdjCells(grid, grid2, gridHeight, gridWidth);
@@ -95,15 +87,15 @@ const playGame = function() {
         };
     };
 
-    requestAnimationFrame(playGame)
+    requestAnimationFrame(playGame);
 };
 
 
-
+// buttons for starting game and creating random grid
 startGame.addEventListener('click', playGame);
 randGrid.addEventListener('click', () => {
-    location.reload()
-})
+    location.reload();
+}); 
 
 
 
