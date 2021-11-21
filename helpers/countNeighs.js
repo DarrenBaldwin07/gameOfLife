@@ -12,12 +12,12 @@ export const countAdjCells = (array, mirror, gridHeight, gridWidth) => {
     for (let x = 1; x < gridHeight - 1; x++) {
         for (let y = 1; y < gridWidth -1; y++) {
             let totalneighs = 0;
-            totalneighs += array[x - 1][y - 1]; 
+            totalneighs += array[x - 1][y - 1];
             totalneighs += array[x][y - 1];
             totalneighs += array[x + 1][y - 1];
             totalneighs += array[x - 1][y];
             totalneighs += array[x + 1][y];
-            totalneighs += array[x - 1 ][y + 1];
+            totalneighs += array[x - 1 ][ y + 1 ];
             totalneighs += array[x][y + 1];
             totalneighs += array[x + 1][ y + 1];
 
