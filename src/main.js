@@ -2,6 +2,7 @@ import {countAdjCells} from '../helpers/countNeighs.js'
 
 const startGame = document.getElementById('start-game');
 const randGrid = document.getElementById('gen-rand');
+const clearGridBtn = document.getElementById('clear-grid');
 const mainCanvas = document.querySelector('canvas');
 const context = mainCanvas.getContext('2d');
 
@@ -9,13 +10,10 @@ const context = mainCanvas.getContext('2d');
 // right now for each 1 that we find we render out one (one pixel) square 
 let canvasDimensions = [window.innerWidth - 100, window.innerHeight * (0.75)];
 
-let tileSize = 10;
-// let gridWidth = canvasDimensions[0] / tileSize;
-// let gridHeight = canvasDimensions[1] / tileSize;
-let gridWidth = 80;
-let gridHeight = 80;
-
-
+let tileSize = 6;
+let gridWidth = canvasDimensions[0] / tileSize;
+let gridHeight = canvasDimensions[1] / tileSize;
+let playing = false;
 mainCanvas.width = canvasDimensions[0];
 mainCanvas.height = canvasDimensions[1];
 // create grid
@@ -33,14 +31,12 @@ let grid2 = createArray(gridWidth);
 let grid = createArray(gridHeight);
 // Change: Make it such that each array inside the main array is either all 0s or all ones (not a random mix)
 
-const createGridRandomly = function(grid) {
-
+const createGrid = function(grid,life=0) {
     for (let i = 0; i < gridHeight; i++) {
-
         for (let j = 0; j < gridWidth; j++) {
-            // gets me a random zero or 1 to append to array
-            const randOneZero = Math.floor(Math.random() * 2);
-            if (randOneZero === 1) {
+            // gets me a random zero or 1 to append to array  
+            const value = life == -1 ? Math.floor(Math.random()*2) : 0
+            if (value === 1) {
                 grid[i][j] = 1;
             } else {
                 grid[i][j] = 0;
@@ -95,7 +91,8 @@ const drawGrid = function (grid) {
 
 const playGame = function () {
     drawGrid(grid)
-    grid2 = countAdjCells(grid, grid2, gridHeight, gridWidth);
+    if (playing) {
+        grid2 = countAdjCells(grid, grid2, gridHeight, gridWidth);
 
     for (let i = 0; i < gridHeight; i++) {
         for (let j = 0; j < gridWidth; j++) {
@@ -104,17 +101,32 @@ const playGame = function () {
     };
 
     requestAnimationFrame(playGame);
+    }
 };
 
-createGridRandomly(grid);
+createGrid(grid);
 drawGrid(grid);
 mainCanvas.addEventListener("click", (event) => {
     grid = clickGrid(grid, event)
     drawGrid(grid)
 });
 
-startGame.addEventListener('click', playGame);
+clearGridBtn.addEventListener("click", (event) => {
+    createGrid(grid,0);
+    drawGrid(grid);
+})
+
+startGame.addEventListener('click', () => {
+    if(!playing) {
+        playing = true;
+        playGame();
+        startGame.innerHTML = "Stop Simulation"
+    }else {
+        playing = false;
+        startGame.innerHTML = "Start Simulation"
+    }
+});
 randGrid.addEventListener('click', () => {
-    createGridRandomly(grid);
+    createGrid(grid,-1);
     drawGrid(grid);
 })
